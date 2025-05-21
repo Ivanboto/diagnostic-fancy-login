@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:16.9-alpine
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=database_test
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - test_net
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@email.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    networks:
+      - test_net
+
+volumes:
+  pgadmin:
+  postgres:
+
+networks:
+  test_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.125.0/24
