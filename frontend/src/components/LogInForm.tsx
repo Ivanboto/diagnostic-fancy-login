@@ -12,31 +12,31 @@ const LogInForm = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleLogIn = (e: React.FormEvent) => {
+  const handleLogIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    fetch(`${API_URL}/auth/login`, {
+
+    const response = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          setError("Invalid email or password");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Login successful:", data);
-        navigate('/home');
-      })
+    });
+
+    if (!response.ok) {
+      setError("Invalid email or password");
+      return;
+    }
+
+    const data = await response.json();
+    console.log("Login successful:", data);
+    navigate("/home");
   };
 
   return (
     <form className="space-y-6" onSubmit={handleLogIn}>
-      {error && <p className="text-red-500 text-sm font-bold">{error}</p>}
+      {error && <p className="text-sm font-bold text-red-500">{error}</p>}
       <InputField
         id="email"
         label="Email address"
