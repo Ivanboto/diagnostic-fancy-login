@@ -2,6 +2,7 @@ import InputField from "./InputField";
 import SubmitButton from "./SubmitButton";
 import AuthLink from "./AuthLink";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -9,6 +10,7 @@ const LogInForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleLogIn = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,6 +30,7 @@ const LogInForm = () => {
       })
       .then((data) => {
         console.log("Login successful:", data);
+        navigate('/home');
       })
   };
 
