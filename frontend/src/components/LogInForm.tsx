@@ -3,13 +3,15 @@ import SubmitButton from "./SubmitButton";
 import AuthLink from "./AuthLink";
 import { useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const LogInForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogIn = (e: React.FormEvent) => {
     e.preventDefault();
-    fetch("http://localhost:3000/auth/login", {
+    fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
