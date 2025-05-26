@@ -1,12 +1,14 @@
 const express = require('express')
 const { PrismaClient } = require('./generated/prisma')
 const bcrypt = require('bcrypt')
+const cors = require('cors')
 
 const PORT = 3000
 const SALT_ROUNDS = 10
 
 const app = express()
 app.use(express.json())
+app.use(cors())
 
 const prisma = new PrismaClient()
 

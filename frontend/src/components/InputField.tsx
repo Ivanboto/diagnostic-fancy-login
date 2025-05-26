@@ -4,9 +4,11 @@ type InputFieldProps = {
   name: string;
   type: string;
   required?: boolean;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const InputField = ({ id, label, name, type, required }: InputFieldProps) => {
+const InputField = ({ id, label, name, type, required, value, onChange }: InputFieldProps) => {
   return (
     <div>
       <label
@@ -21,6 +23,8 @@ const InputField = ({ id, label, name, type, required }: InputFieldProps) => {
           name={name}
           type={type}
           required={required}
+          value={value}
+          onChange={onChange}
           className="bg-brand-accent outline-brand-text-primary focus:outline-brand-bg-secondary block w-full rounded-md px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 focus:outline-2 focus:-outline-offset-2 sm:text-sm/6"
         />
       </div>
