@@ -3,6 +3,8 @@ import InputField from "./InputField";
 import SubmitButton from "./SubmitButton";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const ResetPasswordForm = () => {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -21,6 +23,19 @@ const ResetPasswordForm = () => {
     }
     if (!token) {
       setError("Missing reset token.");
+      return;
+    }
+
+    const response = await fetch(`${API_URL}/auth/reset-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token, password }),
+    });
+
+    if (!response.ok) {
+      setError("Invalid or expired token.");
       return;
     }
 
