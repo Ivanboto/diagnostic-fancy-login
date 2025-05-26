@@ -20,7 +20,7 @@ router.post("/login", async (req, res) => {
   });
 
   if (!user) {
-    return res.status(401).json({ error: "User does not exist" });
+    return res.status(404).json({ error: "User not found" });
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -81,6 +81,40 @@ router.post("/forgot-password", async (req, res) => {
     });
 
   res.status(200).json({ message: "Email sent" });
+});
+
+router.post("/reset-password", async (req, res) => {
+  const { token, password } = req.body;
+
+  if (!token || !password) {
+    return res
+      .status(400)
+      .json({ error: "Token and password are required" });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { resetToken: token },
+  });
+
+  if (!user) {
+    return res.status(400).json({ error: "User not found" });
+  }
+
+  if (user.resetTokenExpiry < new Date()) {
+    return res.status(401).json({ error: "Token has expired" });
+  }
+
+  const newHashedPassword = await bcrypt.hash(password, 10);
+  await prisma.user.update({
+    where: { id: user.id },
+    data: {
+      password: newHashedPassword,
+      resetToken: null,
+      resetTokenExpiry: null,
+    },
+  });
+
+    res.status(200).json({ message: "Password reset successful" });
 });
 
 module.exports = router;
