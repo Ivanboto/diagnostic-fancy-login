@@ -8,9 +8,11 @@ const API_URL = import.meta.env.VITE_API_URL;
 const LogInForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const handleLogIn = (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: {
@@ -20,20 +22,18 @@ const LogInForm = () => {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Login failed");
+          setError("Invalid email or password");
         }
         return response.json();
       })
       .then((data) => {
         console.log("Login successful:", data);
       })
-      .catch((error) => {
-        console.error("Error during login:", error);
-      })
   };
 
   return (
     <form className="space-y-6" onSubmit={handleLogIn}>
+      {error && <p className="text-red-500 text-sm font-bold">{error}</p>}
       <InputField
         id="email"
         label="Email address"
