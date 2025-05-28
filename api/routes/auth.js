@@ -61,13 +61,8 @@ router.post("/forgot-password", async (req, res) => {
     to: email,
     from: process.env.SENDGRID_SINGLE_SENDER_EMAIL,
     subject: "Reset your password",
-    text:
-      "Reset you password with this link: http://localhost:5173/reset-password?token=" +
-      token,
-    html:
-      "<strong>Reset your password with this link: <a href='http://localhost:5173/reset-password?token=" +
-      token +
-      "'>Reset Password</a></strong>",
+    text: `Reset you password with this link: ${process.env.FRONTEND_URL}/reset-password?token=${token}`,
+    html: `<strong>Reset your password with this link: <a href='${process.env.FRONTEND_URL}/reset-password?token=${token}'>Reset Password</a></strong>`,
   };
 
   sgMail
